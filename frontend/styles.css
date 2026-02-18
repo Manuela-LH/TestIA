@@ -1,0 +1,11 @@
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+.user {
+    font-weight: bold;
+}
+.bot {
+    color: #0d6efd;
+}
