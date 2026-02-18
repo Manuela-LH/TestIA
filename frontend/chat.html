@@ -1,24 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>TestIA - Chat</title>
+    <title>Chat IA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="container mt-5">
 
-<div class="container mt-4">
-    <h4>Chat con Gemini 2.5 Flash</h4>
+    <h2>Chat con Gemini</h2>
 
-    <div id="chatBox" class="border p-3 mb-3 chat-box"></div>
+    <div id="chatBox" class="border p-3 mb-3" style="height:300px; overflow-y:auto;"></div>
 
-    <div class="input-group">
-        <input type="text" id="message" class="form-control" placeholder="Escribe un mensaje...">
-        <button class="btn btn-success" onclick="sendMessage()">Enviar</button>
-    </div>
-</div>
+    <input type="text" id="message" class="form-control" placeholder="Escribe tu mensaje">
+    <button class="btn btn-success mt-2" onclick="sendMessage()">Enviar</button>
 
-<script src="app.js"></script>
+    <script src="app.js"></script>
+
 </body>
 </html>

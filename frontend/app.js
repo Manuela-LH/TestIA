@@ -1,21 +1,11 @@
-function saveKey() {
-    const key = document.getElementById("apiKey").value;
-    if (!key) {
-        alert("Ingresa una API Key");
-        return;
-    }
-    localStorage.setItem("gemini_api_key", key);
-    window.location.href = "chat.html";
-}
-
 async function sendMessage() {
+    const messageInput = document.getElementById("message");
+    const chatBox = document.getElementById("chatBox");
+
     const apiKey = localStorage.getItem("gemini_api_key");
-    const message = document.getElementById("message").value;
+    const message = messageInput.value;
 
-    if (!message) return;
-
-    addMessage("Tú", message, "user");
-    document.getElementById("message").value = "";
+    chatBox.innerHTML += `<div><b>Tú:</b> ${message}</div>`;
 
     const response = await fetch("http://127.0.0.1:8000/chat", {
         method: "POST",
@@ -31,17 +21,10 @@ async function sendMessage() {
     const data = await response.json();
 
     if (data.reply) {
-        addMessage("Gemini", data.reply, "bot");
+        chatBox.innerHTML += `<div><b>IA:</b> ${data.reply}</div>`;
     } else {
-        addMessage("Error", "No se pudo conectar con la API", "bot");
+        chatBox.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
     }
-}
 
-function addMessage(sender, text, cssClass) {
-    const chatBox = document.getElementById("chatBox");
-    const div = document.createElement("div");
-    div.className = cssClass;
-    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    messageInput.value = "";
 }
