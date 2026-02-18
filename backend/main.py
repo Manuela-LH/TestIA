@@ -1,37 +1,36 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import requests
+from google import genai
 
 app = FastAPI()
+
+# Permitir conexión desde frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ChatRequest(BaseModel):
     api_key: str
     message: str
 
 @app.post("/chat")
-def chat_with_gemini(data: ChatRequest):
-    url = (
-        "https://generativelanguage.googleapis.com/v1beta/"
-        "models/gemini-2.5-flash:generateContent"
-        f"?key={data.api_key}"
-    )
+def chat(data: ChatRequest):
+    try:
+        # Cliente dinámico con la API Key del usuario
+        client = genai.Client(api_key=data.api_key)
 
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": data.message}
-                ]
-            }
-        ]
-    }
+        response = client.models.generate_content(
+            model="gemini-1.5-pro-latest",
+            contents=data.message
+        )
 
-    response = requests.post(url, json=payload)
+        return {"reply": response.text}
 
-    if response.status_code != 200:
-        return {"error": "Error conectando con Gemini API"}
-
-    result = response.json()
-    text = result["candidates"][0]["content"]["parts"][0]["text"]
-
-    return {"reply": text}
+    except Exception as e:
+        print("ERROR GEMINI:", e)
+        return {"error": str(e)}
